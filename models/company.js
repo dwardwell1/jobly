@@ -118,15 +118,15 @@ class Company {
 					}
 				} else if (filtersArray[x] == 'minEmployees') {
 					if (x > 0) {
-						holder.push(`AND companies.num_employees > `);
+						holder.push(`AND companies.num_employees >= `);
 					} else {
-						holder.push(`companies.num_employees > `);
+						holder.push(`companies.num_employees >= `);
 					}
 				} else if (filtersArray[x] == 'maxEmployees') {
 					if (x > 0) {
-						holder.push(`AND companies.num_employees <`);
+						holder.push(`AND companies.num_employees <=`);
 					} else {
-						holder.push(`companies.num_employees <`);
+						holder.push(`companies.num_employees <=`);
 					}
 				} else throw new BadRequestError(`Improper search phrase: ${filtersArray[x]}`);
 			}
