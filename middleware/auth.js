@@ -22,6 +22,7 @@ function authenticateJWT(req, res, next) {
 			const token = authHeader.replace(/^[Bb]earer /, '').trim();
 			res.locals.user = jwt.verify(token, SECRET_KEY);
 		}
+		console.log(res.locals.user);
 		return next();
 	} catch (err) {
 		return next();
@@ -41,8 +42,30 @@ function ensureLoggedIn(req, res, next) {
 		return next(err);
 	}
 }
+function ensureAdmin(req, res, next) {
+	try {
+		if (!res.locals.user) throw new UnauthorizedError('Must be admin to be here');
+		if (!res.locals.user.isAdmin) throw new UnauthorizedError('Must be admin to be here');
+		return next();
+	} catch (err) {
+		return next(err);
+	}
+}
+
+function ensureUserOrAdmin(req, res, next) {
+	try {
+		if (res.locals.user.username != req.params.username && !res.locals.user.isAdmin)
+			throw new UnauthorizedError(`Must be ${req.params.username} or admin to be here`);
+
+		return next();
+	} catch (err) {
+		return next(err);
+	}
+}
 
 module.exports = {
 	authenticateJWT,
-	ensureLoggedIn
+	ensureLoggedIn,
+	ensureAdmin,
+	ensureUserOrAdmin
 };
