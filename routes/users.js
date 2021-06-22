@@ -74,6 +74,17 @@ router.get('/:username', ensureUserOrAdmin, async function(req, res, next) {
 	}
 });
 
+//job application route!!!!
+
+router.post('/:username/jobs/:id', ensureUserOrAdmin, async function(req, res, next) {
+	try {
+		const jobApp = await User.apply(req.params.username, req.params.id);
+		return res.json({ applied: jobApp.jobId });
+	} catch (err) {
+		return next(err);
+	}
+});
+
 /** PATCH /[username] { user } => { user }
  *
  * Data can include:

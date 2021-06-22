@@ -171,7 +171,7 @@ class Job {
 		const querySql = `UPDATE jobs 
                       SET ${setCols} 
                       WHERE id = ${idVarIdx} 
-                      RETURNING  id,title, salary, equity, company_handle  AS "companyHandle"`;
+                      RETURNING  id, title, salary, equity, company_handle  AS "companyHandle"`;
 		const result = await db.query(querySql, [ ...values, id ]);
 		const job = result.rows[0];
 
@@ -195,7 +195,7 @@ class Job {
 		);
 		const job = result.rows[0];
 
-		if (!job) throw new NotFoundError(`No company: ${handle}`);
+		if (!job) throw new NotFoundError(`No job: ${id}`);
 	}
 }
 

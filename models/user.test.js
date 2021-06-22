@@ -98,6 +98,7 @@ describe('register', function() {
 });
 
 /************************************** findAll */
+//adjust find all to include jobs*****
 
 describe('findAll', function() {
 	test('works', async function() {
@@ -108,14 +109,16 @@ describe('findAll', function() {
 				firstName: 'U1F',
 				lastName: 'U1L',
 				email: 'u1@email.com',
-				isAdmin: false
+				isAdmin: false,
+				jobs: [ 1, 2 ]
 			},
 			{
 				username: 'u2',
 				firstName: 'U2F',
 				lastName: 'U2L',
 				email: 'u2@email.com',
-				isAdmin: false
+				isAdmin: false,
+				jobs: [ 2 ]
 			}
 		]);
 	});
@@ -131,7 +134,8 @@ describe('get', function() {
 			firstName: 'U1F',
 			lastName: 'U1L',
 			email: 'u1@email.com',
-			isAdmin: false
+			isAdmin: false,
+			jobs: [ 1, 2 ]
 		});
 	});
 

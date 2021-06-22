@@ -30,7 +30,7 @@ router.post('/', ensureAdmin, async function(req, res, next) {
 			const errs = validator.errors.map((e) => e.stack);
 			throw new BadRequestError(errs);
 		}
-		console.log('!!!!!!', req.body);
+
 		const job = await Job.create(req.body);
 		return res.status(201).json({ job });
 	} catch (err) {
@@ -98,25 +98,25 @@ router.patch('/:id', ensureAdmin, async function(req, res, next) {
 			throw new BadRequestError(errs);
 		}
 
-		const job = await Job.update(req.params.handle, req.body);
+		const job = await Job.update(req.params.id, req.body);
 		return res.json({ job });
 	} catch (err) {
 		return next(err);
 	}
 });
 
-// /** DELETE /[handle]  =>  { deleted: handle }
+// /** DELETE /[handle]  =>  { deleted: job }
 //  *
 //  * Authorization: login
 //  */
 
-// router.delete('/:handle', ensureAdmin, async function(req, res, next) {
-// 	try {
-// 		await Company.remove(req.params.handle);
-// 		return res.json({ deleted: req.params.handle });
-// 	} catch (err) {
-// 		return next(err);
-// 	}
-// });
+router.delete('/:id', ensureAdmin, async function(req, res, next) {
+	try {
+		await Job.remove(req.params.id);
+		return res.json({ deleted: req.params.id });
+	} catch (err) {
+		return next(err);
+	}
+});
 
 module.exports = router;
