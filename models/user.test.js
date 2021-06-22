@@ -223,3 +223,12 @@ describe('remove', function() {
 		}
 	});
 });
+
+/************************* application testing*/
+
+describe('application', function() {
+	test('works', async function() {
+		let res = await User.apply('u2', 1);
+		expect(res).toEqual({ applied: 1 });
+	});
+});

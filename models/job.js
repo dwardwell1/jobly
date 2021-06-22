@@ -91,58 +91,34 @@ class Job {
 	}
 
 	static async findFilter(filter) {
-		let filtersArray = Object.keys(filter);
-		let paramsArray = Object.values(filter);
+		//make function to create SQL string
 
-		//make SQL strings for each type of query
-		function getSQl() {
-			let holder = [];
-			for (let x = 0; x < filtersArray.length; x++) {
-				if (filtersArray[x] == 'title') {
-					if (x > 0) {
-						holder.push(` AND LOWER(jobs.title) LIKE`);
-					} else {
-						holder.push(`LOWER(jobs.title) LIKE`);
-					}
-				} else if (filtersArray[x] == 'minSalary') {
-					if (x > 0) {
-						holder.push(`AND jobs.salary >= `);
-					} else {
-						holder.push(`jobs.salary >= `);
-					}
-				} else if (filtersArray[x] == 'hasEquity') {
-					if (x > 0) {
-						holder.push(`AND jobs.equity > 0`);
-					} else {
-						holder.push(`jobs.equity > 0`);
-					}
-				} else throw new BadRequestError(`Improper search phrase: ${filtersArray[x]}`);
-			}
-			return holder;
-		}
-		//if name query, take search paramater and ajust SQL text to search for case insensitive LIKES
-		for (let x = 0; x < paramsArray.length; x++) {
-			if (isNaN(paramsArray[x])) {
-				paramsArray[x] = `'%${paramsArray[x].toLowerCase()}%'`;
+		let holding = [];
+		function equitySQL() {
+			if ('hasEquity' in filter) {
+				if (filter.hasEquity == true) holding.push(`jobs.equity > 0`);
 			}
 		}
-		//run our SQL function to create array of search types
-		let cquilFilters = getSQl();
-		//zip together search types and their parameters into array and flatten it so the order goes [search type, parameter, search type, parameter...]. Might not be neccesary though
-		const zipper = cquilFilters
-			.map(function(key, i) {
-				return [ key, paramsArray[i] ];
-			})
-			.flat();
-
-		// Join the zipper together into one string to add to SQL query
-		let q = zipper.join(' ');
-		console.log(q);
+		function titleSQL() {
+			if ('title' in filter) {
+				filter.title = `'%${filter.title.toLowerCase()}%'`;
+				holding.push(`LOWER(jobs.title) LIKE ${filter.title}`);
+			}
+		}
+		function minSalarySQL() {
+			if ('minSalary' in filter) {
+				holding.push(`jobs.salary >= ${filter.minSalary}`);
+			}
+		}
+		equitySQL();
+		titleSQL();
+		minSalarySQL();
+		let finalQuery = holding.join(' AND ');
 
 		const jobRes = await db.query(
 			`SELECT id,title, salary, equity, company_handle  AS "companyHandle"
             FROM jobs
-		     WHERE ${q} `
+		     WHERE ${finalQuery} `
 		);
 
 		return jobRes.rows;

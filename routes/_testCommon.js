@@ -74,6 +74,9 @@ async function commonBeforeAll() {
 		equity: 0,
 		company_handle: 'c1'
 	});
+	await db.query(
+		`INSERT INTO jobs (id,title, salary, equity, company_handle) VALUES (1,'tester1', 100, 0, 'c1'), (2,'tester2', 1000, .05, 'c1') RETURNING id `
+	);
 }
 
 async function commonBeforeEach() {

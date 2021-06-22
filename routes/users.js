@@ -79,7 +79,7 @@ router.get('/:username', ensureUserOrAdmin, async function(req, res, next) {
 router.post('/:username/jobs/:id', ensureUserOrAdmin, async function(req, res, next) {
 	try {
 		const jobApp = await User.apply(req.params.username, req.params.id);
-		return res.json({ applied: jobApp.jobId });
+		return res.json({ applied: `${jobApp.applied}` });
 	} catch (err) {
 		return next(err);
 	}

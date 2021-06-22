@@ -181,6 +181,8 @@ class User {
 		return user;
 	}
 
+	// added logic for USER/admin to apply to job
+
 	static async apply(username, jobId) {
 		let result = await db.query(
 			`INSERT INTO applications (username,
@@ -191,8 +193,8 @@ class User {
 		);
 		const resume = result.rows[0];
 		if (!resume) throw new NotFoundError(`No job: ${jobId}`);
-		console.log(resume);
-		return resume;
+
+		return { applied: jobId };
 	}
 
 	/** Delete given user from database; returns undefined. */
